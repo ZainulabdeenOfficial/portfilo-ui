@@ -78,12 +78,13 @@ export class ContactsAdminComponent implements OnInit {
   }
 
   markRead(message: ContactMessage): void {
-    if (!message.id) return;
-    this.addMarking(message.id);
+    const id = message.id;
+    if (id == null) return;
+    this.addMarking(id);
     this.saving.set(true);
-    this.contactService.markRead(message.id).subscribe(res => {
+    this.contactService.markRead(id).subscribe(res => {
       this.saving.set(false);
-      this.removeMarking(message.id);
+      this.removeMarking(id);
       if (res) {
         this.toast.show('Marked as read.', 'success');
         this.refresh();
@@ -94,9 +95,10 @@ export class ContactsAdminComponent implements OnInit {
   }
 
   deleteMessage(message: ContactMessage): void {
-    if (!message.id) return;
+    const id = message.id;
+    if (id == null) return;
     this.saving.set(true);
-    this.contactService.delete(message.id).subscribe(success => {
+    this.contactService.delete(id).subscribe(success => {
       this.saving.set(false);
       if (success) {
         this.toast.show('Message deleted.', 'success');
