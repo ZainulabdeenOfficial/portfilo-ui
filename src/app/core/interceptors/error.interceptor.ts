@@ -22,7 +22,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
           toast.show('Server error. Please try again later.', 'error');
           break;
         case 0:
-          toast.show('Network error. Check your connection.', 'error');
+          // Skip noisy network errors on reload/offline transitions.
           break;
         default:
           toast.show('An unexpected error occurred.', 'error');
