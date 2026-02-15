@@ -133,8 +133,9 @@ export class ContactsAdminComponent implements OnInit {
   }
 
   isMarking(message: ContactMessage): boolean {
-    if (!message.id) return false;
-    return this.markingIds().has(message.id);
+    const id = message.id;
+    if (id == null) return false;
+    return this.markingIds().has(id);
   }
 
   private addMarking(id: number): void {
