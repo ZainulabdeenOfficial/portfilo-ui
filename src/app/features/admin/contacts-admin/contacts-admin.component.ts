@@ -21,6 +21,7 @@ import { RevealDirective } from '@shared/directives/reveal.directive';
         <div class="admin-contacts__actions" appReveal>
           <a routerLink="/admin/bio" class="btn btn--outline">Back to Bio</a>
           <a routerLink="/admin/books" class="btn btn--outline">Manage Books</a>
+          <a routerLink="/admin/projects" class="btn btn--outline">Manage Projects</a>
           <a routerLink="/" class="btn btn--outline">Back to Portfolio</a>
         </div>
 
@@ -45,7 +46,8 @@ import { RevealDirective } from '@shared/directives/reveal.directive';
               <p class="message-card__body">{{ msg.message }}</p>
 
               <div class="message-card__actions">
-                <button class="btn btn--sm btn--outline" (click)="markRead(msg)" [disabled]="msg.isRead || saving()">
+                <button class="btn btn--sm btn--outline" (click)="markRead(msg)"
+                  [disabled]="msg.isRead || isMarking(msg) || saving()">
                   Mark Read
                 </button>
                 <button class="btn btn--sm btn--primary" (click)="deleteMessage(msg)" [disabled]="saving()">
@@ -64,6 +66,7 @@ export class ContactsAdminComponent implements OnInit {
   readonly messages = signal<ContactMessage[]>([]);
   readonly loading = signal(true);
   readonly saving = signal(false);
+  readonly markingIds = signal<Set<number>>(new Set());
 
   constructor(
     private contactService: ContactService,
@@ -76,9 +79,11 @@ export class ContactsAdminComponent implements OnInit {
 
   markRead(message: ContactMessage): void {
     if (!message.id) return;
+    this.addMarking(message.id);
     this.saving.set(true);
     this.contactService.markRead(message.id).subscribe(res => {
       this.saving.set(false);
+      this.removeMarking(message.id);
       if (res) {
         this.toast.show('Marked as read.', 'success');
         this.refresh();
@@ -123,5 +128,22 @@ export class ContactsAdminComponent implements OnInit {
 
   trackById(_: number, item: ContactMessage): number | undefined {
     return item.id;
+  }
+
+  isMarking(message: ContactMessage): boolean {
+    if (!message.id) return false;
+    return this.markingIds().has(message.id);
+  }
+
+  private addMarking(id: number): void {
+    const next = new Set(this.markingIds());
+    next.add(id);
+    this.markingIds.set(next);
+  }
+
+  private removeMarking(id: number): void {
+    const next = new Set(this.markingIds());
+    next.delete(id);
+    this.markingIds.set(next);
   }
 }

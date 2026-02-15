@@ -34,6 +34,9 @@ import { AuthService } from '@core/services/auth.service';
           <li *ngIf="isAuthed()">
             <a routerLink="/admin/contacts" class="nav-link">Admin Contacts</a>
           </li>
+          <li *ngIf="isAuthed()">
+            <a routerLink="/admin/projects" class="nav-link">Admin Projects</a>
+          </li>
         </ul>
 
         <div class="navbar__actions">

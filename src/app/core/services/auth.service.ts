@@ -1,7 +1,7 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, tap, catchError, of } from 'rxjs';
+import { Observable, map, catchError, of } from 'rxjs';
 import { environment } from '@env/environment';
 import { LoginRequest, LoginResponse } from '../models';
 
@@ -19,11 +19,37 @@ export class AuthService {
   }
 
   login(credentials: LoginRequest): Observable<LoginResponse | null> {
-    return this.http.post<LoginResponse>(`${this.baseUrl}/Auth/login`, credentials).pipe(
-      tap((response: LoginResponse) => {
-        this.setToken(response.token);
+    return this.http.post<any>(`${this.baseUrl}/Auth/login`, credentials, { observe: 'response' }).pipe(
+      map((response: HttpResponse<any>) => {
+        const body = response.body;
+        const headerAuth = response.headers.get('Authorization') || response.headers.get('authorization');
+        const headerToken = headerAuth?.replace(/^Bearer\s+/i, '');
+        const token = this.extractToken(body) || headerToken;
+        if (!token) return null;
+
+        const expiration = body?.expiration || body?.expires || body?.data?.expiration || '';
+        this.setToken(token);
+        return { token, expiration } as LoginResponse;
       }),
       catchError(() => of(null))
+    );
+  }
+
+  private extractToken(body: any): string | null {
+    if (!body) return null;
+    if (typeof body === 'string') return body;
+
+    return (
+      body.token ||
+      body.accessToken ||
+      body.access_token ||
+      body.jwt ||
+      body.result ||
+      body.data?.token ||
+      body.data?.accessToken ||
+      body.data?.access_token ||
+      body.data?.jwt ||
+      null
     );
   }
 

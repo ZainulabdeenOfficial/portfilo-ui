@@ -38,7 +38,7 @@ import { staggerFadeUp } from '@shared/animations/shared.animations';
               <h3 class="project-card__title">{{ project.title }}</h3>
               <p class="project-card__desc">{{ project.description }}</p>
               <div class="project-card__techs">
-                <span *ngFor="let tech of project.technologiesUsed" class="tech-badge">{{ tech }}</span>
+                <span *ngFor="let tech of parseTech(project.technologiesUsed)" class="tech-badge">{{ tech }}</span>
               </div>
               <div class="project-card__links">
                 <a *ngIf="project.projectUrl" [href]="project.projectUrl" target="_blank" class="btn btn--sm btn--primary">
@@ -77,5 +77,10 @@ export class ProjectsComponent implements OnInit {
 
   trackById(_: number, item: Project): number | undefined {
     return item.id;
+  }
+
+  parseTech(value: string | null | undefined): string[] {
+    if (!value) return [];
+    return value.split(',').map(v => v.trim()).filter(Boolean);
   }
 }

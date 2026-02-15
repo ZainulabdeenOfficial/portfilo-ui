@@ -36,6 +36,13 @@ export const routes: Routes = [
     data: { animation: 'AdminContactsPage' }
   },
   {
+    path: 'admin/projects',
+    loadComponent: () =>
+      import('./features/admin/projects-admin/projects-admin.component').then(m => m.ProjectsAdminComponent),
+    canActivate: [authGuard],
+    data: { animation: 'AdminProjectsPage' }
+  },
+  {
     path: '**',
     redirectTo: ''
   }

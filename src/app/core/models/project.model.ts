@@ -3,7 +3,9 @@ export interface Project {
   imageUrl: string;
   title: string;
   description: string;
-  technologiesUsed: string[];
+  technologiesUsed: string;
   projectUrl: string;
   githubUrl: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
