@@ -14,7 +14,7 @@ import { staggerFadeUp } from '@shared/animations/shared.animations';
   template: `
     <section id="books" class="section books-section">
       <div class="container">
-        <app-section-heading tag="Reading" title="Books I Recommend"></app-section-heading>
+        <app-section-heading tag="Reading" title="My Books"></app-section-heading>
 
         <div *ngIf="loading()" class="books-grid">
           <div *ngFor="let i of [1,2,3,4]" class="book-card book-card--skeleton">
