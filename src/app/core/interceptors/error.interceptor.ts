@@ -10,10 +10,15 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
+      // Skip 401 on login endpoint — auth.service handles it
+      const isLoginReq = req.url.includes('/Auth/login');
+
       switch (error.status) {
         case 401:
-          toast.show('Session expired. Please log in again.', 'error');
-          router.navigate(['/login']);
+          if (!isLoginReq) {
+            toast.show('Session expired. Please log in again.', 'error');
+            router.navigate(['/login']);
+          }
           break;
         case 404:
           // Let individual services handle 404

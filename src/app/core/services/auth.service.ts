@@ -1,7 +1,7 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, map, catchError, throwError } from 'rxjs';
+import { Observable, of, map, catchError, throwError } from 'rxjs';
 import { environment } from '@env/environment';
 import { LoginRequest, LoginResponse } from '../models';
 
@@ -20,19 +20,31 @@ export class AuthService {
 
   login(credentials: LoginRequest): Observable<LoginResponse | null> {
     return this.http.post<any>(`${this.baseUrl}/Auth/login`, credentials, { observe: 'response' }).pipe(
-      map((response: HttpResponse<any>) => {
-        const body = response.body;
-        const headerAuth = response.headers.get('Authorization') || response.headers.get('authorization');
-        const headerToken = headerAuth?.replace(/^Bearer\s+/i, '');
-        const token = this.extractToken(body) || headerToken;
-        if (!token) return null;
-
-        const expiration = body?.expiration || body?.expires || body?.data?.expiration || '';
-        this.setToken(token);
-        return { token, expiration } as LoginResponse;
-      }),
-      catchError((err) => throwError(() => err))
+      map((response: HttpResponse<any>) => this.handleLoginBody(response.body, response.headers)),
+      catchError((err: HttpErrorResponse) => {
+        // The backend returns 401 WITH a valid token in the body — treat it as success
+        if (err.status === 401 && err.error?.token) {
+          const result = this.handleLoginBody(err.error, null);
+          return of(result);
+        }
+        return throwError(() => err);
+      })
     );
+  }
+
+  private handleLoginBody(body: any, headers: any): LoginResponse | null {
+    const headerAuth = headers?.get?.('Authorization') || headers?.get?.('authorization');
+    const headerToken = headerAuth?.replace(/^Bearer\s+/i, '');
+    const token = this.extractToken(body) || headerToken;
+    if (!token) return null;
+
+    this.setToken(token);
+    return {
+      token,
+      username: body?.username,
+      email: body?.email,
+      expiration: body?.expiration || body?.expires || ''
+    } as LoginResponse;
   }
 
   private extractToken(body: any): string | null {
