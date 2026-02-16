@@ -74,14 +74,21 @@ export class LoginComponent {
       return;
     }
 
+    if (this.submitting()) return;
     this.submitting.set(true);
-    this.authService.login(this.form.value).subscribe(res => {
-      this.submitting.set(false);
-      if (res) {
-        this.toast.show('Logged in successfully!', 'success');
-        this.router.navigate(['/admin/bio']);
-      } else {
-        this.toast.show('Invalid credentials.', 'error');
+    this.authService.login(this.form.value).subscribe({
+      next: (res) => {
+        this.submitting.set(false);
+        if (res) {
+          this.toast.show('Logged in successfully!', 'success');
+          this.router.navigate(['/admin/bio']);
+        } else {
+          this.toast.show('Invalid credentials.', 'error');
+          this.triggerShake();
+        }
+      },
+      error: () => {
+        this.submitting.set(false);
         this.triggerShake();
       }
     });

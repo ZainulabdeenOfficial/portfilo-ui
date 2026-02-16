@@ -1,7 +1,7 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, map, catchError, of } from 'rxjs';
+import { Observable, map, catchError, throwError } from 'rxjs';
 import { environment } from '@env/environment';
 import { LoginRequest, LoginResponse } from '../models';
 
@@ -31,7 +31,7 @@ export class AuthService {
         this.setToken(token);
         return { token, expiration } as LoginResponse;
       }),
-      catchError(() => of(null))
+      catchError((err) => throwError(() => err))
     );
   }
 

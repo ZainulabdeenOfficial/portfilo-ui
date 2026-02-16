@@ -1,4 +1,6 @@
 {
+  "buildCommand": "npx ng build --configuration production",
+  "outputDirectory": "dist/portfolio-ui/browser",
   "functions": {
     "api/[...path].js": {
       "memory": 256,
@@ -6,6 +8,7 @@
     }
   },
   "rewrites": [
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
+    { "source": "/api/(.*)", "destination": "/api/[...path]" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
