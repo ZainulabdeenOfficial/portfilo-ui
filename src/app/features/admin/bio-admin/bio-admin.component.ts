@@ -78,6 +78,7 @@ import { RevealDirective } from '@shared/directives/reveal.directive';
 })
 export class BioAdminComponent implements OnInit {
   readonly saving = signal(false);
+  readonly editingId = signal<number | null>(null);
   form: FormGroup;
 
   constructor(
@@ -101,6 +102,7 @@ export class BioAdminComponent implements OnInit {
   ngOnInit(): void {
     this.bioService.getBio().subscribe((bio: Bio | null) => {
       if (bio) {
+        this.editingId.set(bio.id ?? null);
         this.form.patchValue(bio);
       }
     });
@@ -113,10 +115,15 @@ export class BioAdminComponent implements OnInit {
     }
 
     this.saving.set(true);
-    this.bioService.createBio(this.form.value).subscribe(res => {
+    const payload = this.form.value as Bio;
+    const id = this.editingId();
+    const request$ = id ? this.bioService.updateBio(payload, id) : this.bioService.createBio(payload);
+
+    request$.subscribe(res => {
       this.saving.set(false);
       if (res) {
-        this.toast.show('Bio saved successfully.', 'success');
+        this.editingId.set(res.id ?? id ?? null);
+        this.toast.show(id ? 'Bio updated successfully.' : 'Bio saved successfully.', 'success');
       } else {
         this.toast.show('Failed to save bio.', 'error');
       }

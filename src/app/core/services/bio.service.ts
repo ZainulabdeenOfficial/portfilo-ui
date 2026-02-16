@@ -21,4 +21,11 @@ export class BioService {
       catchError(() => of(null))
     );
   }
+
+  updateBio(payload: Bio, id?: number): Observable<Bio | null> {
+    const url = id != null ? `${this.baseUrl}/Bio/${id}` : `${this.baseUrl}/Bio`;
+    return this.http.put<Bio>(url, payload).pipe(
+      catchError(() => of(null))
+    );
+  }
 }
