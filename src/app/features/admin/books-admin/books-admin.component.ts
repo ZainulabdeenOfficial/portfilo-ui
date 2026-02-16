@@ -57,6 +57,7 @@ import { RevealDirective } from '@shared/directives/reveal.directive';
             </button>
             <a routerLink="/admin/contacts" class="btn btn--outline">Manage Contacts</a>
             <a routerLink="/admin/projects" class="btn btn--outline">Manage Projects</a>
+            <a routerLink="/admin/pictures" class="btn btn--outline">Manage Pictures</a>
             <a routerLink="/admin/bio" class="btn btn--outline">Back to Bio</a>
             <a routerLink="/" class="btn btn--outline">Back to Portfolio</a>
           </div>

@@ -43,6 +43,13 @@ export const routes: Routes = [
     data: { animation: 'AdminProjectsPage' }
   },
   {
+    path: 'admin/pictures',
+    loadComponent: () =>
+      import('./features/admin/pictures-admin/pictures-admin.component').then(m => m.PicturesAdminComponent),
+    canActivate: [authGuard],
+    data: { animation: 'AdminPicturesPage' }
+  },
+  {
     path: '**',
     redirectTo: ''
   }

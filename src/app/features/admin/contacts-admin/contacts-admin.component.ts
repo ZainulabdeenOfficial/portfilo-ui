@@ -22,6 +22,7 @@ import { RevealDirective } from '@shared/directives/reveal.directive';
           <a routerLink="/admin/bio" class="btn btn--outline">Back to Bio</a>
           <a routerLink="/admin/books" class="btn btn--outline">Manage Books</a>
           <a routerLink="/admin/projects" class="btn btn--outline">Manage Projects</a>
+          <a routerLink="/admin/pictures" class="btn btn--outline">Manage Pictures</a>
           <a routerLink="/" class="btn btn--outline">Back to Portfolio</a>
         </div>
 
