@@ -56,7 +56,10 @@
             "production": { "buildTarget": "portfolio-ui:build:production" },
             "development": { "buildTarget": "portfolio-ui:build:development" }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "development",
+          "options": {
+            "proxyConfig": "proxy.conf.json"
+          }
         }
       }
     }
