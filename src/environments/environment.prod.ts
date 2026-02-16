@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiBaseUrl: '/api'
+  apiBaseUrl: 'https://zainportfilo.runasp.net/api'
 };
