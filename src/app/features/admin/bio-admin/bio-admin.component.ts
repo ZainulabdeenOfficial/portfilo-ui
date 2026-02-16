@@ -117,7 +117,7 @@ export class BioAdminComponent implements OnInit {
     this.saving.set(true);
     const payload = this.form.value as Bio;
     const id = this.editingId();
-    const request$ = id ? this.bioService.updateBio(payload, id) : this.bioService.createBio(payload);
+    const request$ = id ? this.bioService.updateBio(payload) : this.bioService.createBio(payload);
 
     request$.subscribe(res => {
       this.saving.set(false);
