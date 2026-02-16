@@ -38,7 +38,7 @@ import { gsap } from 'gsap';
           <a (click)="scrollTo('projects')" class="btn btn--primary" appMagnetic>
             View My Work
           </a>
-          <a href="assets/resume/muhammad-zain-ul-abideen-cv.pdf" target="_blank" rel="noopener"
+          <a href="https://i.postimg.cc/25dbkXCc/M-Zain-Ul-Abideen-cv.png" target="_blank" rel="noopener"
              class="btn btn--outline" appMagnetic>
             Download Resume
           </a>
