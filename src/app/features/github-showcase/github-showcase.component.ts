@@ -1,15 +1,15 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GithubRepo } from '@core/models';
 import { GithubService } from '@core/services/github.service';
 import { SectionHeadingComponent } from '@shared/components/section-heading/section-heading.component';
 import { SkeletonComponent } from '@shared/components/skeleton/skeleton.component';
-import { RevealDirective } from '@shared/directives/reveal.directive';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-github-showcase',
   standalone: true,
-  imports: [CommonModule, SectionHeadingComponent, SkeletonComponent, RevealDirective],
+  imports: [CommonModule, SectionHeadingComponent, SkeletonComponent],
   template: `
     <section id="github" class="section github-section">
       <div class="container">
@@ -27,10 +27,13 @@ import { RevealDirective } from '@shared/directives/reveal.directive';
           <article class="glass-card graph-card">
             <div class="card-header">
               <h3>Commit Contribution Graph</h3>
-              <a [href]="githubProfile" target="_blank" rel="noopener" class="profile-link">
-                <i class="fab fa-github"></i>
-                {{ username }}
-              </a>
+              <div class="header-meta">
+                <span class="commit-total">Total Public Commits (365d): {{ totalCommits() }}</span>
+                <a [href]="githubProfile" target="_blank" rel="noopener" class="profile-link">
+                  <i class="fab fa-github"></i>
+                  {{ username }}
+                </a>
+              </div>
             </div>
 
             <img
@@ -50,7 +53,7 @@ import { RevealDirective } from '@shared/directives/reveal.directive';
 
             <div *ngIf="repos().length > 0; else noRepos" class="repos-grid">
               <a
-                *ngFor="let repo of repos(); trackBy: trackByRepoId"
+                *ngFor="let repo of visibleRepos(); trackBy: trackByRepoId"
                 class="repo-item"
                 [href]="repo.html_url"
                 target="_blank"
@@ -69,6 +72,12 @@ import { RevealDirective } from '@shared/directives/reveal.directive';
               </a>
             </div>
 
+            <div *ngIf="repos().length > previewLimit" class="section-actions">
+              <button class="btn btn--outline" (click)="toggleShowAllRepos()">
+                {{ showAllRepos() ? 'View Less' : 'View All Repositories' }}
+              </button>
+            </div>
+
             <ng-template #noRepos>
               <p class="empty-copy">No repositories available.</p>
             </ng-template>
@@ -82,16 +91,31 @@ import { RevealDirective } from '@shared/directives/reveal.directive';
 export class GithubShowcaseComponent implements OnInit {
   readonly repos = signal<GithubRepo[]>([]);
   readonly loading = signal(true);
+  readonly totalCommits = signal(0);
+  readonly showAllRepos = signal(false);
+
+  readonly previewLimit = 10;
 
   readonly username = 'ZainulabdeenOfficial';
   readonly githubProfile = `https://github.com/${this.username}`;
   readonly activeGraphUrl = signal(`https://ghchart.rshah.org/409ba5/${this.username}`);
 
+  readonly visibleRepos = computed(() => {
+    if (this.showAllRepos()) {
+      return this.repos();
+    }
+    return this.repos().slice(0, this.previewLimit);
+  });
+
   constructor(private githubService: GithubService) {}
 
   ngOnInit(): void {
-    this.githubService.getRepositories().subscribe(data => {
-      this.repos.set(data);
+    forkJoin({
+      repos: this.githubService.getRepositories(),
+      totalCommits: this.githubService.getRecentPublicCommitTotal(365)
+    }).subscribe(data => {
+      this.repos.set(data.repos);
+      this.totalCommits.set(data.totalCommits);
       this.loading.set(false);
     });
   }
@@ -100,6 +124,10 @@ export class GithubShowcaseComponent implements OnInit {
     if (this.activeGraphUrl() !== `https://ghchart.rshah.org/${this.username}`) {
       this.activeGraphUrl.set(`https://ghchart.rshah.org/${this.username}`);
     }
+  }
+
+  toggleShowAllRepos(): void {
+    this.showAllRepos.update(value => !value);
   }
 
   trackByRepoId(_: number, repo: GithubRepo): number {

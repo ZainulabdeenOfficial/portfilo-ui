@@ -36,13 +36,19 @@ import { fadeIn } from '@shared/animations/shared.animations';
 
         <!-- Gallery Grid -->
         <div *ngIf="!loading()" class="gallery-masonry">
-          <div *ngFor="let pic of filteredPictures(); trackBy: trackById"
+          <div *ngFor="let pic of visiblePictures(); trackBy: trackById"
                class="gallery-item" @fadeIn appReveal>
             <img [src]="pic.imageUrl" [alt]="pic.title || 'Gallery image'" loading="lazy" />
             <div class="gallery-item__overlay">
               <p>{{ pic.title }}</p>
             </div>
           </div>
+        </div>
+
+        <div *ngIf="!loading() && filteredPictures().length > previewLimit" class="section-actions">
+          <button class="btn btn--outline" (click)="toggleShowAllPictures()">
+            {{ showAllPictures() ? 'View Less' : 'View All Pictures' }}
+          </button>
         </div>
 
         <div *ngIf="!loading() && filteredPictures().length === 0" class="empty-state" appReveal>
@@ -59,6 +65,8 @@ export class GalleryComponent implements OnInit {
   readonly allPictures = signal<Picture[]>([]);
   readonly loading = signal(true);
   readonly activeCategory = signal('All');
+  readonly showAllPictures = signal(false);
+  readonly previewLimit = 10;
 
   readonly categories = computed(() => {
     const cats = [...new Set(this.allPictures().map((p: Picture) => p.category).filter(Boolean))];
@@ -69,6 +77,13 @@ export class GalleryComponent implements OnInit {
     const cat = this.activeCategory();
     if (cat === 'All') return this.allPictures();
     return this.allPictures().filter((p: Picture) => p.category === cat);
+  });
+
+  readonly visiblePictures = computed(() => {
+    if (this.showAllPictures()) {
+      return this.filteredPictures();
+    }
+    return this.filteredPictures().slice(0, this.previewLimit);
   });
 
   constructor(private picturesService: PicturesService) {}
@@ -82,9 +97,14 @@ export class GalleryComponent implements OnInit {
 
   filterByCategory(cat: string): void {
     this.activeCategory.set(cat);
+    this.showAllPictures.set(false);
   }
 
   trackById(_: number, item: Picture): number | undefined {
     return item.id;
+  }
+
+  toggleShowAllPictures(): void {
+    this.showAllPictures.update(value => !value);
   }
 }

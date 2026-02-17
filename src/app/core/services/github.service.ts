@@ -13,8 +13,28 @@ export class GithubService {
   getRepositories(): Observable<GithubRepo[]> {
     const url = `${this.apiBase}/users/${this.username}/repos?per_page=100&type=owner&sort=updated`;
     return this.http.get<GithubRepo[]>(url).pipe(
-      map(repos => repos.sort((a, b) => +new Date(b.updated_at) - +new Date(a.updated_at))),
+      map(repos =>
+        repos
+          .filter(repo => !repo.fork)
+          .sort((a, b) => +new Date(b.updated_at) - +new Date(a.updated_at))
+      ),
       catchError(() => of([]))
+    );
+  }
+
+  getRecentPublicCommitTotal(days = 365): Observable<number> {
+    const url = `${this.apiBase}/users/${this.username}/events/public?per_page=100`;
+    const cutoff = new Date();
+    cutoff.setHours(0, 0, 0, 0);
+    cutoff.setDate(cutoff.getDate() - (days - 1));
+
+    return this.http.get<Array<{ type: string; created_at: string; payload?: { commits?: unknown[] } }>>(url).pipe(
+      map(events =>
+        events
+          .filter(event => event.type === 'PushEvent' && new Date(event.created_at) >= cutoff)
+          .reduce((sum, event) => sum + (event.payload?.commits?.length ?? 0), 0)
+      ),
+      catchError(() => of(0))
     );
   }
 }

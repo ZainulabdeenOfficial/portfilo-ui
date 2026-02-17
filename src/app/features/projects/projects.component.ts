@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProjectsService } from '@core/services/projects.service';
 import { Project } from '@core/models';
@@ -29,8 +29,8 @@ import { staggerFadeUp } from '@shared/animations/shared.animations';
         </div>
 
         <!-- Projects -->
-        <div *ngIf="!loading()" class="projects-grid" [@staggerFadeUp]="projects().length">
-          <div *ngFor="let project of projects(); trackBy: trackById" class="project-card glass-card" appReveal [revealDelay]="50">
+        <div *ngIf="!loading()" class="projects-grid" [@staggerFadeUp]="visibleProjects().length">
+          <div *ngFor="let project of visibleProjects(); trackBy: trackById" class="project-card glass-card" appReveal [revealDelay]="50">
             <div class="project-card__image-wrapper">
               <img [src]="project.imageUrl" [alt]="project.title" class="project-card__image" loading="lazy" />
             </div>
@@ -52,6 +52,12 @@ import { staggerFadeUp } from '@shared/animations/shared.animations';
           </div>
         </div>
 
+        <div *ngIf="!loading() && projects().length > previewLimit" class="section-actions">
+          <button class="btn btn--outline" (click)="toggleShowAllProjects()">
+            {{ showAllProjects() ? 'View Less' : 'View All Projects' }}
+          </button>
+        </div>
+
         <div *ngIf="!loading() && projects().length === 0" class="empty-state" appReveal>
           <i class="fas fa-folder-open"></i>
           <p>No projects available yet.</p>
@@ -65,6 +71,15 @@ import { staggerFadeUp } from '@shared/animations/shared.animations';
 export class ProjectsComponent implements OnInit {
   readonly projects = signal<Project[]>([]);
   readonly loading = signal(true);
+  readonly showAllProjects = signal(false);
+  readonly previewLimit = 10;
+
+  readonly visibleProjects = computed(() => {
+    if (this.showAllProjects()) {
+      return this.projects();
+    }
+    return this.projects().slice(0, this.previewLimit);
+  });
 
   constructor(private projectsService: ProjectsService) {}
 
@@ -82,5 +97,9 @@ export class ProjectsComponent implements OnInit {
   parseTech(value: string | null | undefined): string[] {
     if (!value) return [];
     return value.split(',').map(v => v.trim()).filter(Boolean);
+  }
+
+  toggleShowAllProjects(): void {
+    this.showAllProjects.update(value => !value);
   }
 }

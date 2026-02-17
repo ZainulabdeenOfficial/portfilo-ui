@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BooksService } from '@core/services/books.service';
 import { Book } from '@core/models';
@@ -24,8 +24,8 @@ import { staggerFadeUp } from '@shared/animations/shared.animations';
           </div>
         </div>
 
-        <div *ngIf="!loading()" class="books-grid" [@staggerFadeUp]="books().length">
-          <div *ngFor="let book of books(); trackBy: trackById" class="book-card glass-card" appReveal>
+        <div *ngIf="!loading()" class="books-grid" [@staggerFadeUp]="visibleBooks().length">
+          <div *ngFor="let book of visibleBooks(); trackBy: trackById" class="book-card glass-card" appReveal>
             <div class="book-card__cover-wrapper">
               <img [src]="book.coverImageUrl" [alt]="book.title" class="book-card__cover" loading="lazy" />
             </div>
@@ -44,6 +44,12 @@ import { staggerFadeUp } from '@shared/animations/shared.animations';
           </div>
         </div>
 
+        <div *ngIf="!loading() && books().length > previewLimit" class="section-actions">
+          <button class="btn btn--outline" (click)="toggleShowAllBooks()">
+            {{ showAllBooks() ? 'View Less' : 'View All Books' }}
+          </button>
+        </div>
+
         <div *ngIf="!loading() && books().length === 0" class="empty-state" appReveal>
           <i class="fas fa-book-open"></i>
           <p>No books available yet.</p>
@@ -57,6 +63,15 @@ import { staggerFadeUp } from '@shared/animations/shared.animations';
 export class BooksComponent implements OnInit {
   readonly books = signal<Book[]>([]);
   readonly loading = signal(true);
+  readonly showAllBooks = signal(false);
+  readonly previewLimit = 10;
+
+  readonly visibleBooks = computed(() => {
+    if (this.showAllBooks()) {
+      return this.books();
+    }
+    return this.books().slice(0, this.previewLimit);
+  });
 
   constructor(private booksService: BooksService) {}
 
@@ -77,5 +92,9 @@ export class BooksComponent implements OnInit {
 
   trackByIndex(index: number): number {
     return index;
+  }
+
+  toggleShowAllBooks(): void {
+    this.showAllBooks.update(value => !value);
   }
 }
