@@ -28,7 +28,7 @@ import { forkJoin } from 'rxjs';
             <div class="card-header">
               <h3>Commit Contribution Graph</h3>
               <div class="header-meta">
-                <span class="commit-total">Total Public Commits (365d): {{ totalCommits() }}</span>
+                <span class="commit-total">Total Public Commits: {{ totalCommits() }}</span>
                 <a [href]="githubProfile" target="_blank" rel="noopener" class="profile-link">
                   <i class="fab fa-github"></i>
                   {{ username }}

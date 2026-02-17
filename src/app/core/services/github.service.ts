@@ -23,6 +23,19 @@ export class GithubService {
   }
 
   getRecentPublicCommitTotal(days = 365): Observable<number> {
+    const url = `${this.apiBase}/search/commits?q=author:${this.username}&per_page=1`;
+    const headers = {
+      Accept: 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28'
+    };
+
+    return this.http.get<{ total_count: number }>(url, { headers }).pipe(
+      map(response => response.total_count ?? 0),
+      catchError(() => this.getRecentPublicCommitTotalFromEvents(days))
+    );
+  }
+
+  private getRecentPublicCommitTotalFromEvents(days: number): Observable<number> {
     const url = `${this.apiBase}/users/${this.username}/events/public?per_page=100`;
     const cutoff = new Date();
     cutoff.setHours(0, 0, 0, 0);
