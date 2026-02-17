@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HeroComponent } from '../hero/hero.component';
 import { BioComponent } from '../bio/bio.component';
 import { ProjectsComponent } from '../projects/projects.component';
+import { BlogsComponent } from '../blogs/blogs.component';
 import { CertificationsComponent } from '../certifications/certifications.component';
 import { BooksComponent } from '../books/books.component';
 import { GalleryComponent } from '../gallery/gallery.component';
@@ -17,6 +18,7 @@ import { ContactComponent } from '../contact/contact.component';
     HeroComponent,
     BioComponent,
     ProjectsComponent,
+    BlogsComponent,
     CertificationsComponent,
     BooksComponent,
     GalleryComponent,
@@ -27,6 +29,7 @@ import { ContactComponent } from '../contact/contact.component';
     <app-hero></app-hero>
     <app-bio></app-bio>
     <app-projects></app-projects>
+    <app-blogs></app-blogs>
     <app-certifications></app-certifications>
     <app-books></app-books>
     <app-gallery></app-gallery>

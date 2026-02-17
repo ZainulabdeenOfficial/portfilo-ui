@@ -4,3 +4,4 @@ export * from './book.model';
 export * from './picture.model';
 export * from './contact.model';
 export * from './auth.model';
+export * from './blog.model';

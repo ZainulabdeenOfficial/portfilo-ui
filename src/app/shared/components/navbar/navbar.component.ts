@@ -21,6 +21,7 @@ import { AuthService } from '@core/services/auth.service';
           <li><a (click)="scrollTo('hero')" class="nav-link">Home</a></li>
           <li><a (click)="scrollTo('about')" class="nav-link">About</a></li>
           <li><a (click)="scrollTo('projects')" class="nav-link">Projects</a></li>
+          <li><a (click)="scrollTo('blogs')" class="nav-link">Blogs</a></li>
           <li><a (click)="scrollTo('certifications')" class="nav-link">Certifications</a></li>
           <li><a (click)="scrollTo('books')" class="nav-link">Books</a></li>
           <li><a (click)="scrollTo('gallery')" class="nav-link">Gallery</a></li>

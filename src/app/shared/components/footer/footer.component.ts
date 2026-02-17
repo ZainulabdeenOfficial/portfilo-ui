@@ -19,7 +19,7 @@ import { CommonModule } from '@angular/common';
           </div>
         </div>
         <div class="footer__divider"></div>
-        <p class="footer__copy">&copy; {{ year }} All rights reserved.</p>
+        <p class="footer__copy">&copy; {{ year }} All rights reserved. </p>
       </div>
     </footer>
   `,
