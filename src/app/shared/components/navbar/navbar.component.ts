@@ -25,6 +25,7 @@ import { AuthService } from '@core/services/auth.service';
           <li><a (click)="scrollTo('certifications')" class="nav-link">Certifications</a></li>
           <li><a (click)="scrollTo('books')" class="nav-link">Books</a></li>
           <li><a (click)="scrollTo('gallery')" class="nav-link">Gallery</a></li>
+          <li><a (click)="scrollTo('github')" class="nav-link">GitHub</a></li>
           <li><a (click)="scrollTo('contact')" class="nav-link">Contact</a></li>
           <li *ngIf="isAuthed()">
             <a routerLink="/admin/bio" class="nav-link">Admin Bio</a>

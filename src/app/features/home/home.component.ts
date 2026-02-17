@@ -9,6 +9,7 @@ import { BooksComponent } from '../books/books.component';
 import { GalleryComponent } from '../gallery/gallery.component';
 import { TimelineComponent } from '../timeline/timeline.component';
 import { ContactComponent } from '../contact/contact.component';
+import { GithubShowcaseComponent } from '../github-showcase/github-showcase.component';
 
 @Component({
   selector: 'app-home',
@@ -22,6 +23,7 @@ import { ContactComponent } from '../contact/contact.component';
     CertificationsComponent,
     BooksComponent,
     GalleryComponent,
+    GithubShowcaseComponent,
     TimelineComponent,
     ContactComponent
   ],
@@ -33,6 +35,7 @@ import { ContactComponent } from '../contact/contact.component';
     <app-certifications></app-certifications>
     <app-books></app-books>
     <app-gallery></app-gallery>
+    <app-github-showcase></app-github-showcase>
     <app-timeline></app-timeline>
     <app-contact></app-contact>
   `,

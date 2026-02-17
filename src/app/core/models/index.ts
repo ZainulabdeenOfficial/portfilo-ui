@@ -5,3 +5,4 @@ export * from './picture.model';
 export * from './contact.model';
 export * from './auth.model';
 export * from './blog.model';
+export * from './github.model';
