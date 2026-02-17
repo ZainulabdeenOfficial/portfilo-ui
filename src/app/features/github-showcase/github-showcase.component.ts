@@ -24,7 +24,7 @@ import { RevealDirective } from '@shared/directives/reveal.directive';
         </div>
 
         <div *ngIf="!loading()" class="github-layout">
-          <article class="glass-card graph-card" appReveal>
+          <article class="glass-card graph-card">
             <div class="card-header">
               <h3>Commit Contribution Graph</h3>
               <a [href]="githubProfile" target="_blank" rel="noopener" class="profile-link">
@@ -35,13 +35,14 @@ import { RevealDirective } from '@shared/directives/reveal.directive';
 
             <img
               class="contribution-graph"
-              [src]="contributionGraphUrl"
+              [src]="activeGraphUrl()"
               alt="GitHub Contribution Graph"
               loading="lazy"
+              (error)="onGraphError()"
             />
           </article>
 
-          <article class="glass-card repos-card" appReveal>
+          <article class="glass-card repos-card">
             <div class="card-header">
               <h3>🚀 Open Source Projects</h3>
               <span class="repo-count">{{ repos().length }} repos</span>
@@ -84,7 +85,7 @@ export class GithubShowcaseComponent implements OnInit {
 
   readonly username = 'ZainulabdeenOfficial';
   readonly githubProfile = `https://github.com/${this.username}`;
-  readonly contributionGraphUrl = `https://ghchart.rshah.org/409ba5/${this.username}`;
+  readonly activeGraphUrl = signal(`https://ghchart.rshah.org/409ba5/${this.username}`);
 
   constructor(private githubService: GithubService) {}
 
@@ -93,6 +94,12 @@ export class GithubShowcaseComponent implements OnInit {
       this.repos.set(data);
       this.loading.set(false);
     });
+  }
+
+  onGraphError(): void {
+    if (this.activeGraphUrl() !== `https://ghchart.rshah.org/${this.username}`) {
+      this.activeGraphUrl.set(`https://ghchart.rshah.org/${this.username}`);
+    }
   }
 
   trackByRepoId(_: number, repo: GithubRepo): number {

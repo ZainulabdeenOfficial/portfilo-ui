@@ -3,6 +3,26 @@
 
 .github-section {
   background: transparent;
+
+  .container {
+    position: relative;
+  }
+
+  .container::before {
+    content: '';
+    position: absolute;
+    inset: -30px 10% auto 10%;
+    height: 180px;
+    background: radial-gradient(circle at center, rgba(108, 99, 255, 0.12), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .github-loading,
+  .github-layout {
+    position: relative;
+    z-index: 1;
+  }
 }
 
 .github-loading,
@@ -15,6 +35,7 @@
 .repos-card {
   padding: 1.4rem;
   border-radius: 16px;
+  border-color: rgba(108, 99, 255, 0.2);
 }
 
 .card-header {
@@ -39,14 +60,18 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
+
+  &:hover {
+    color: #a855f7;
+  }
 }
 
 .contribution-graph {
   width: 100%;
   max-width: 100%;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(108, 99, 255, 0.25);
+  background: rgba(16, 13, 44, 0.75);
   padding: 0.75rem;
 }
 
@@ -66,16 +91,16 @@
 }
 
 .repo-item {
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(108, 99, 255, 0.18);
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.04);
+  background: linear-gradient(160deg, rgba(108, 99, 255, 0.08), rgba(255, 255, 255, 0.03));
   padding: 1.1rem;
   text-decoration: none;
   color: inherit;
   transition: border-color 0.3s ease, transform 0.3s ease;
 
   &:hover {
-    border-color: rgba(108, 99, 255, 0.45);
+    border-color: rgba(168, 85, 247, 0.55);
     transform: translateY(-5px);
   }
 
@@ -118,7 +143,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.8rem;
-  color: rgba(255, 255, 255, 0.68);
+  color: rgba(255, 255, 255, 0.8);
   font-size: 0.82rem;
 
   i {
