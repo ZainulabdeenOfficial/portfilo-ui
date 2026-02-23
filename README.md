@@ -6,7 +6,7 @@
 
 # 🚀 Portfolio UI - Modern Angular Portfolio Application
 
-<img src="https://img.shields.io/badge/Angular-17.3.0-DD0031?style=for-the-badge&logo=angular&logoColor=white" alt="Angular" />
+<img src="https://img.shields.io/badge/Angular-20.3.0-DD0031?style=for-the-badge&logo=angular&logoColor=white" alt="Angular" />
 <img src="https://img.shields.io/badge/TypeScript-5.4.5-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
 <img src="https://img.shields.io/badge/Three.js-0.162.0-000000?style=for-the-badge&logo=three.js&logoColor=white" alt="Three.js" />
 <img src="https://img.shields.io/badge/GSAP-3.12.5-88CE02?style=for-the-badge&logo=greensock&logoColor=white" alt="GSAP" />
@@ -736,6 +736,6 @@ If you have any questions or need help, feel free to:
 
 ### 🌟 If you find this project useful, please consider giving it a star! 🌟
 
-**Made with ❤️ using Angular 17**
+**Made with ❤️ using Angular 20**
 
 </div>
